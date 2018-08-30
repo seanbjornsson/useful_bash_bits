@@ -15,3 +15,17 @@ find . -maxdepth 1 -type d  -exec du -s {} + | sort -r -n
 # gsub(/"/, "", $n) gets rid of quotes that break summing
 awk -F, '{ gsub(/"/, "", $n); sum += $n; } END { print sum; }' giant.csv
 ```
+
+**Delete multiline regex from file**
+```sh
+# Needs tmp file in the middle, because cat $f > $f truncates the file for the > before executing the cat.
+f=FILENAME
+pcregrep -Mv "some multiline\nregext" $f > tmp.txt
+cat tmp.txt > $f
+
+# For many files
+for f in $(find ./some/path/* -type f); do
+pcregrep -Mv "some multiline\nregext" $f > tmp.txt
+cat tmp.txt > $f
+done
+```
